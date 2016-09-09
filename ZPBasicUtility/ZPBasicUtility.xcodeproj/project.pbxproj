@@ -18,6 +18,7 @@
 		A87DA1561D82625A0061F147 /* NSString+ZPEncryption.m in Sources */ = {isa = PBXBuildFile; fileRef = A87DA1511D82625A0061F147 /* NSString+ZPEncryption.m */; };
 		A87DA1571D82625A0061F147 /* NSString+ZPRegex.m in Sources */ = {isa = PBXBuildFile; fileRef = A87DA1531D82625A0061F147 /* NSString+ZPRegex.m */; };
 		A87DA1581D82625A0061F147 /* NSString+ZPURLCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = A87DA1551D82625A0061F147 /* NSString+ZPURLCoding.m */; };
+		A87DA1621D82B80D0061F147 /* ZPFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A87DA1611D82B80D0061F147 /* ZPFileManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,8 @@
 		A87DA1531D82625A0061F147 /* NSString+ZPRegex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ZPRegex.m"; sourceTree = "<group>"; };
 		A87DA1541D82625A0061F147 /* NSString+ZPURLCoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ZPURLCoding.h"; sourceTree = "<group>"; };
 		A87DA1551D82625A0061F147 /* NSString+ZPURLCoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ZPURLCoding.m"; sourceTree = "<group>"; };
+		A87DA1601D82B80D0061F147 /* ZPFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZPFileManager.h; sourceTree = "<group>"; };
+		A87DA1611D82B80D0061F147 /* ZPFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZPFileManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +101,7 @@
 		A87DA1381D813ED20061F147 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				A87DA1591D82AC780061F147 /* Extensions */,
 				A87DA1461D825A530061F147 /* Categories */,
 			);
 			path = Classes;
@@ -118,6 +122,15 @@
 				A87DA14E1D8262280061F147 /* NSDate+ZPUtils.m */,
 			);
 			path = Categories;
+			sourceTree = "<group>";
+		};
+		A87DA1591D82AC780061F147 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A87DA1601D82B80D0061F147 /* ZPFileManager.h */,
+				A87DA1611D82B80D0061F147 /* ZPFileManager.m */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -193,6 +206,7 @@
 				A87DA1291D813E670061F147 /* ViewController.m in Sources */,
 				A87DA14F1D8262280061F147 /* NSDate+ZPUtils.m in Sources */,
 				A87DA14C1D8260610061F147 /* UIView+ZPUtils.m in Sources */,
+				A87DA1621D82B80D0061F147 /* ZPFileManager.m in Sources */,
 				A87DA1261D813E670061F147 /* AppDelegate.m in Sources */,
 				A87DA1561D82625A0061F147 /* NSString+ZPEncryption.m in Sources */,
 				A87DA1581D82625A0061F147 /* NSString+ZPURLCoding.m in Sources */,

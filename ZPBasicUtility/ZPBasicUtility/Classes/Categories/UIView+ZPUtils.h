@@ -144,6 +144,13 @@
 
 #pragma mark - ZP
 
+/**
+ *  在View中通过事件响应者链获取当前的ViewController
+ *  Ex. 在Cell中可以通过此方法获取当前当前cell的tableView被哪个视图控制器控制
+ *      可以用来做简单的页面切换
+ *
+ *  @return 当前响应View视图的第一个ViewController对象
+ */
 - (UIViewController *)zp_viewController;
 
 @end
