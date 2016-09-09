@@ -14,7 +14,7 @@
 @implementation NSString (ZPEncryption)
 
 //MD5
-- (NSString *)md5String {
+- (NSString *)zp_md5String {
     const char *cStr = [self UTF8String];
     unsigned char result[16];
     CC_MD5( cStr, (unsigned int)strlen(cStr), result );
@@ -27,7 +27,7 @@
              ] lowercaseString];
 }
 
-- (NSString*)sha1String
+- (NSString*)zp_sha1String
 {
     const char *ptr = [self UTF8String];
     int i =0;
@@ -52,7 +52,7 @@
 }
 
 //DES加密
-- (NSString *)desStringWithKey:(NSString *)key
+- (NSString *)zp_desStringWithKey:(NSString *)key
 {
     NSString *ciphertext = nil;
     const char *textBytes = [self UTF8String];
@@ -93,7 +93,7 @@
 }
 
 //3DES加密
-- (NSString*)tripleDESWithKey:(NSString*)key {
+- (NSString*)zp_tripleDESWithKey:(NSString*)key {
     
     NSData* data = [self dataUsingEncoding:NSUTF8StringEncoding];
     size_t plainTextBufferSize = [data length];

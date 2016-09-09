@@ -15,14 +15,14 @@
  *
  *  @return 加密后字符串
  */
-- (NSString *)md5String;
+- (NSString *)zp_md5String;
 
 /**
  *  sha1算法加密
  *
  *  @return 加密后字符串
  */
-- (NSString *)sha1String;
+- (NSString *)zp_sha1String;
 
 /**
  *  des算法加密
@@ -31,11 +31,11 @@
  *
  *  @return 加密后字符串
  */
-- (NSString *)desStringWithKey:(NSString *)key;
+- (NSString *)zp_desStringWithKey:(NSString *)key;
 
 /**
  *  3DES加密
  */
-- (NSString*)tripleDESWithKey:(NSString*)key;
+- (NSString*)zp_tripleDESWithKey:(NSString*)key;
 
 @end

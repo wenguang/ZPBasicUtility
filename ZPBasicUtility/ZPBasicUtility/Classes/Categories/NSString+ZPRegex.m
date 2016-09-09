@@ -10,14 +10,14 @@
 
 @implementation NSString (ZPRegex)
 
-- (BOOL)isMatchChinese {
+- (BOOL)zp_isMatchChinese {
     ///匹配字符：以中文字
     NSString *chinese = @"^((?i)[\u4E00-\u9FA5])*";
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", chinese];
     return [predicate evaluateWithObject:self];
 }
 
--(BOOL)isMatchPhoneNumberFormat
+-(BOOL)zp_isMatchPhoneNumberFormat
 {
     NSString * MOBILE = @"^1(3[0-9]|5[0-35-9]|8[025-9])\\d{8}$";
     NSString * CM = @"^1(34[0-8]|(3[5-9]|5[017-9]|8[278])\\d)\\d{7}$";
@@ -35,25 +35,6 @@
     BOOL res4 = [regexct evaluateWithObject:self];
     
     if (res1 || res2 || res3 || res4 ){
-        return YES;
-    }else{
-        return NO;
-    }
-}
-
-- (BOOL)isMatchPasswordFormat
-{
-    NSString *PASSWORD = @"^[a-zA-Z0-9]{6,20}+$";
-    NSString *NUMBER = @".*[0-9].*";
-    NSString *CHARACTER = @".*[a-zA-Z].*";
-    
-    NSPredicate *regexPassword = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", PASSWORD];
-    NSPredicate *regexNumber = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", NUMBER];
-    NSPredicate *regexCharacter = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", CHARACTER];
-    
-    if ([regexPassword evaluateWithObject:self]
-        && [regexNumber evaluateWithObject:self]
-        && [regexCharacter evaluateWithObject:self]) {
         return YES;
     }else{
         return NO;

@@ -10,8 +10,13 @@
 
 @interface NSString (ZPRegex)
 
-- (BOOL)isMatchChinese;
-- (BOOL)isMatchPhoneNumberFormat;
-- (BOOL)isMatchPasswordFormat;
+/**
+ * 匹配中文
+ */
+- (BOOL)zp_isMatchChinese;
+/**
+ * 匹配手机号
+ */
+- (BOOL)zp_isMatchPhoneNumberFormat;
 
 @end
