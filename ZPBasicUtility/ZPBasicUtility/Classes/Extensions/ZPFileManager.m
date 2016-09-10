@@ -121,23 +121,23 @@ done:
     ZPDispatchQueueRelease(_ioQueue);
 }
 
-+ (NSString *)zp_documentPath{
++ (NSString *)documentPath{
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths firstObject];
     return documentsDirectory;
 }
 
-+ (NSURL *)zp_documentURL{
-    return [NSURL URLWithString:[self zp_documentPath]];
++ (NSURL *)documentURL{
+    return [NSURL URLWithString:[self documentPath]];
 }
 
-+ (NSString *)zp_fileCachePath{
-    return [[self zp_documentPath] stringByAppendingPathComponent:@"FileCache"];
++ (NSString *)fileCachePath{
+    return [[self documentPath] stringByAppendingPathComponent:@"FileCache"];
 }
 
 #pragma mark - 计算文件的MD5值
 
-+(NSString*)zp_fileMD5:(NSString*)filePath{
++(NSString*)fileMD5:(NSString*)filePath{
     if ([filePath length] > 0 && [[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
         return (__bridge_transfer NSString *)__FileMD5HashCreateWithPath((__bridge CFStringRef)filePath, FileHashDefaultChunkSizeForReadingData);
     }
@@ -146,7 +146,7 @@ done:
 
 #pragma mark - 读取文件转换为NSData，IO操作在独立的dispatch_queue_t中执行
 
-- (NSData *)zp_dataWithFilePath:(NSString *)filePath{
+- (NSData *)dataWithFilePath:(NSString *)filePath{
     NSData __block *fileData=nil;
     void(^fileAction)() = ^ {
         NSError *error=nil;
@@ -161,12 +161,12 @@ done:
     return fileData;
 }
 
-- (NSData *)zp_dataWithFileURL:(NSURL *)fileURL{
+- (NSData *)dataWithFileURL:(NSURL *)fileURL{
     NSString *filePath = [fileURL absoluteString];
-    return [self zp_dataWithFilePath:filePath];
+    return [self dataWithFilePath:filePath];
 }
 
-- (void)zp_dataWithFilePath:(NSString *)filePath completion:(ZPFileManagerCacheAction)action{
+- (void)dataWithFilePath:(NSString *)filePath completion:(ZPFileManagerCacheAction)action{
     dispatch_queue_t currentQueue = dispatch_get_global_queue(0, 0);
     dispatch_async(_ioQueue, ^{
         NSError *error=nil;
@@ -184,14 +184,14 @@ done:
     });
 }
 
-- (void)zp_dataWithFileURL:(NSURL *)fileURL completion:(ZPFileManagerCacheAction)action{
+- (void)dataWithFileURL:(NSURL *)fileURL completion:(ZPFileManagerCacheAction)action{
     NSString *filePath = [fileURL absoluteString];
-    [self zp_dataWithFilePath:filePath completion:action];
+    [self dataWithFilePath:filePath completion:action];
 }
 
 #pragma mark - 判断文件是否存在，IO操作在独立的dispatch_queue_t中执行
 
-- (BOOL)zp_fileExistsAtPath:(NSString *)filePath{
+- (BOOL)fileExistsAtPath:(NSString *)filePath{
     BOOL __block isExist=NO;
     void(^fileAction)() = ^ {
         isExist=[self.fileManager fileExistsAtPath:filePath];
@@ -202,12 +202,12 @@ done:
     return isExist;
 }
 
-- (BOOL)zp_fileExistsAtURL:(NSURL *)fileURL{
+- (BOOL)fileExistsAtURL:(NSURL *)fileURL{
     NSString *filePath = [fileURL absoluteString];
-    return [self zp_fileExistsAtPath:filePath];
+    return [self fileExistsAtPath:filePath];
 }
 
-- (void)zp_fileExistsAtPath:(NSString *)filePath completion:(ZPFileManagerCheckAction)action{
+- (void)fileExistsAtPath:(NSString *)filePath completion:(ZPFileManagerCheckAction)action{
     dispatch_queue_t currentQueue = dispatch_get_global_queue(0, 0);
     dispatch_async(_ioQueue, ^{
         BOOL isExist=[self.fileManager fileExistsAtPath:filePath];
@@ -217,14 +217,14 @@ done:
     });
 }
 
-- (void)zp_fileExistsAtURL:(NSURL *)fileURL completion:(ZPFileManagerCheckAction)action{
+- (void)fileExistsAtURL:(NSURL *)fileURL completion:(ZPFileManagerCheckAction)action{
     NSString *filePath = [fileURL absoluteString];
-    [self zp_fileExistsAtPath:filePath];
+    [self fileExistsAtPath:filePath];
 }
 
 #pragma mark - 写文件，IO操作可选阻塞和非阻塞两种方式
 
-- (void)zp_writeData:(NSData *)fileData toFilePath:(NSString *)filePath waitUntilDone:(BOOL)willWait{
+- (void)writeData:(NSData *)fileData toFilePath:(NSString *)filePath waitUntilDone:(BOOL)willWait{
     if ([fileData length]<=0) {
         return;
     }
@@ -246,10 +246,10 @@ done:
 
 #pragma mark - 清除缓存文件
 
-- (void)zp_cleanCacheWithCompletion:(ZPFileManagerCleanAction)action{
+- (void)cleanCacheWithCompletion:(ZPFileManagerCleanAction)action{
     dispatch_queue_t currentQueue= dispatch_get_global_queue(0, 0);
     dispatch_async(_ioQueue, ^{
-        NSString *filePath=[ZPFileManager zp_fileCachePath];
+        NSString *filePath=[ZPFileManager fileCachePath];
         if([self.fileManager fileExistsAtPath:filePath isDirectory:nil]){
             [[NSFileManager defaultManager] createDirectoryAtPath:filePath withIntermediateDirectories:NO attributes:nil error:nil];
             NSError *error = nil;
@@ -264,7 +264,7 @@ done:
     });
 }
 
-- (void)zp_cleanCacheInBackgroundWithCompletion:(ZPFileManagerCleanAction)action{
+- (void)cleanCacheInBackgroundWithCompletion:(ZPFileManagerCleanAction)action{
     UIApplication *application = [UIApplication sharedApplication];
     __block UIBackgroundTaskIdentifier bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
         // Clean up any unfinished task business by marking where you
@@ -274,7 +274,7 @@ done:
     }];
     
     // Start the long-running task and return immediately.
-    [self zp_cleanCacheWithCompletion:^{
+    [self cleanCacheWithCompletion:^{
         [application endBackgroundTask:bgTask];
         bgTask = UIBackgroundTaskInvalid;
     }];
