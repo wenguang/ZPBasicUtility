@@ -28,22 +28,16 @@ typedef void(^ZPFileManagerCleanAction)();
 ///读取文件转换为NSData，IO操作在独立的dispatch_queue_t中执行
 
 - (NSData *)dataWithFilePath:(NSString *)filePath;
-
 - (NSData *)dataWithFileURL:(NSURL *)fileURL;
-
 - (void)dataWithFilePath:(NSString *)filePath completion:(ZPFileManagerCacheAction)action;
-
 - (void)dataWithFileURL:(NSURL *)fileURL completion:(ZPFileManagerCacheAction)action;
 
 
 ///判断文件是否存在，IO操作在独立的dispatch_queue_t中执行
 
 - (BOOL)fileExistsAtPath:(NSString *)filePath;
-
 - (BOOL)fileExistsAtURL:(NSURL *)fileURL;
-
 - (void)fileExistsAtPath:(NSString *)filePath completion:(ZPFileManagerCheckAction)action;
-
 - (void)fileExistsAtURL:(NSURL *)fileURL completion:(ZPFileManagerCheckAction)action;
 
 
@@ -55,7 +49,17 @@ typedef void(^ZPFileManagerCleanAction)();
 //清除缓存文件
 
 - (void)cleanCacheWithCompletion:(ZPFileManagerCleanAction)action;
-
 - (void)cleanCacheInBackgroundWithCompletion:(ZPFileManagerCleanAction)action;
+
+
+//文件压缩、解压
+
+- (void)unzipAndSaveFileNamed:(NSString*)filePath into:(NSString*)unZipDir;
+- (void)unzipAndSaveFileNamed:(NSString*)filePath into:(NSString*)unZipDir deleteZipFileAfterDone:(BOOL)deleteZipFileAfterDone;
+
+
+//让指定路径不让icloud同步，不然就违反了apple的核审规则
+
++ (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
 
 @end

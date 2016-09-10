@@ -9,6 +9,7 @@
 #import "ZPFileManager.h"
 #import <UIKit/UIKit.h>
 #import <CommonCrypto/CommonDigest.h>
+#import "ZipArchive.h"
 
 // OS_OBJECT_USE_OBJC 这个宏是在sdk6.0之后才有的,如果是之前的,则OS_OBJECT_USE_OBJC为0
 // GDC是6.0引入的
@@ -172,7 +173,7 @@ done:
         NSError *error=nil;
         NSData *fileData=[NSData dataWithContentsOfFile:filePath options:NSDataReadingMappedIfSafe error:&error];
         if (error) {
-            NSLog(@"<FileManager>:%@",[error localizedDescription]);
+            NSLog(@"<ZPFileManager>:%@",[error localizedDescription]);
             dispatch_async(currentQueue, ^{
                 action(nil);
             });
@@ -232,7 +233,7 @@ done:
         NSError *error=nil;
         [fileData writeToFile:filePath options:NSDataWritingAtomic error:&error];
         if (error) {
-            NSLog(@"<FileManager>%@",[error localizedDescription]);
+            NSLog(@"<ZPFileManager>%@",[error localizedDescription]);
         }
     };
     if (willWait) {
@@ -255,7 +256,7 @@ done:
             NSError *error = nil;
             [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
             if (error) {
-                NSLog(@"<FileManager>:%@",[error localizedDescription]);
+                NSLog(@"<ZPFileManager>:%@",[error localizedDescription]);
             }
             dispatch_async(currentQueue, ^{
                 action();
@@ -278,6 +279,77 @@ done:
         [application endBackgroundTask:bgTask];
         bgTask = UIBackgroundTaskInvalid;
     }];
+}
+
+
+#pragma mark - 文件压缩、解压
+
+- (void)unzipAndSaveFileNamed:(NSString*)filePath into:(NSString*)unZipDir {
+    [self unzipAndSaveFileNamed:filePath into:unZipDir deleteZipFileAfterDone:YES];
+}
+
+- (void)unzipAndSaveFileNamed:(NSString*)filePath into:(NSString*)unZipDir deleteZipFileAfterDone:(BOOL)deleteZipFileAfterDone {
+    
+    void (^unZipAction)() = ^{
+        
+        ZipArchive* za = [[ZipArchive alloc] init];
+#ifdef DEBUGX
+        NSLog(@"%s %@", __FUNCTION__, fileName);
+        NSLog(@"%s unzipping %@", __FUNCTION__, FilePath);
+#endif
+        if( [za UnzipOpenFile:filePath]){
+            NSString *strPath=[NSString stringWithFormat:@"%@", unZipDir];
+#ifdef DEBUGX
+            NSLog(@"%s %@", __FUNCTION__, strPath);
+#endif
+            NSError *error;
+            BOOL isDir;
+            
+            if ( !([self.fileManager fileExistsAtPath:[strPath stringByDeletingPathExtension] isDirectory:&isDir] && isDir))
+                [self.fileManager createDirectoryAtPath:[strPath stringByDeletingPathExtension] withIntermediateDirectories:NO attributes:nil error:&error];
+            
+            //start unzip
+            BOOL ret = [za UnzipFileTo:unZipDir overWrite:YES];
+            if( NO==ret ){
+                //解析错误，就删除文件
+                NSError *error;
+                if ([self.fileManager fileExistsAtPath:filePath]) {
+                    [self.fileManager removeItemAtPath:filePath error:&error];
+                }
+                
+            }
+            [za UnzipCloseFile];
+            
+            if (deleteZipFileAfterDone) {
+                //解压成功，删除zip包
+                [self.fileManager removeItemAtPath:filePath error:nil];
+            }
+        }else{
+            // error handler here
+            //解析错误，就删除文件
+            NSError *error;
+            if ([self.fileManager fileExistsAtPath:filePath]) {
+                [self.fileManager removeItemAtPath:filePath error:&error];
+            }
+            
+        }
+        
+    };
+    
+    dispatch_sync(_ioQueue, unZipAction);
+}
+
+
+//让指定路径不让icloud同步，不然就违反了apple的核审规则
+
++ (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL {
+    NSError *error = nil;
+    BOOL success = [URL setResourceValue: [NSNumber numberWithBool: YES]
+                                  forKey: NSURLIsExcludedFromBackupKey error: &error];
+    if(!success){
+        NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
+    }
+    return success;
 }
 
 @end
