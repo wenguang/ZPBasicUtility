@@ -17,4 +17,9 @@
 
 * __ZPFileManager__: 一个NSFileManager扩展，把相关IO操作放在一个独立的dispatch_queue_t中执行，提供获取App document目录、读取文件转换为NSData、判断文件是否存在、写文件（IO操作可选阻塞和非阻塞两种方式）、清除缓存文件、文件解压、设置指定目录不同步icloud。
 
+## 依赖库
+
+* __ZipArchive__: 1.4.0
+
+
 	
